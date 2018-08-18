@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shortify: The URL Shortner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/css/uikit.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.10/js/uikit-icons.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+<section class="uk-section">
+    <div class="uk-container">
+        <input v-model="url" type="text" class="uk-input uk-form-large uk-animation-shake" placeholder="Enter a Long URL Here ..">
+        <button @click="makeurl" class="uk-button uk-button-primary uk-width-1-1"><strong>Generate</strong></button>
+
+        <div class="uk-placeholder">
+            <center><strong>[[message]]</strong> <br v-if="copyurl"> <br v-if="copyurl">
+                <input v-if='copyurl' class="uk-input uk-success uk-form-width-medium" :value="copyurl">
+            </center>
+        </div>
+    </div>
+</section>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+app = new Vue({
+    delimiters: ['[[',']]'],
+    el: '#app',
+    data: {
+        url: '',
+        copyurl: "",
+        message: 'Paste a long Url above and see the magic',
+    },
+    methods: {
+        makeurl: function(){
+            var url = '{% url 'makeurl' %}?url='+this.url
+            console.log(url)
+            this.message = 'Please wait a moment..'
+            fetch(url).then(response => response.json()).then(data => {
+                if(data.error) this.message = data.error;
+                else{
+                    this.message = 'Copy the URL from Below'
+                    this.copyurl = data.url
+                }
+            });
+        }
+    },
+});
+
+
+
+</script>
+
+</body>
+</html>

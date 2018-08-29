@@ -12,6 +12,7 @@ def home(request):
 def makeurl(request):
     url = request.GET.get('url','')
     if url=='': return JsonResponse({'error':"BAD URL GIVEN"})
+    if not url.startswith('http'): url = 'http://'+url
     d = Link.objects.first().short
     d = gen(d)
     Link(short=d, original=url).save()
